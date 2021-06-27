@@ -111,7 +111,8 @@ class Personnage():
         pv = 14 if value > 14 else value
         return pv
     
-    def __init__(self, name:str, age = "", possessions:list=[]):
+    def __init__(self, metier:str="", name:str="", age = "", possessions:list=[]):
+        self.metier = metier
         self.name = name
         self.age = Personnage.verify_age(age)
         self.possessions = possessions
@@ -152,7 +153,7 @@ class Personnage():
         return sum([value for value in self.carac.values()])
     
     def __str__(self):
-        carac = '\n' + self.name.capitalize() + '\n'
+        carac = '\n' + self.metier.title() + self.name.title() + '\n'
         carac += f"Point de vie: {self.pv}\n"
         carac += f"\tCARACTERISTIQUES (total:{self.comput_total()})\n"
         for item in self.carac.items():
@@ -184,6 +185,7 @@ class Personnage():
     
     def get_full_dict(self):
         full_dict= {**self.carac, **self.compe}
+        full_dict['metier'] = self.metier.title()
         full_dict['name'] = self.name.title()
         full_dict['pv'] = self.pv
         full_dict['age'] = self.age
@@ -206,10 +208,10 @@ class LotPersonnage():
         with open (path_, "w") as f:
             f.write(inst.lot_str())
 
-    def __init__(self, name:str, age = "", possessions:list=[]):
+    def __init__(self, metier:str = "", name:str = "", age = "", possessions:list=[]):
         self.dico = {}
         for i in range(NOMBRE_TIRAGE):
-            self.dico[f'name_{i+1}'] = Personnage(name=name, age=age, possessions=possessions)
+            self.dico[f'name_{i+1}'] = Personnage(metier=metier, name=name, age=age, possessions=possessions)
         LotPersonnage.save_file(self)
     
     def lot_str(self):
@@ -225,11 +227,12 @@ class LotPersonnage():
 
 if __name__ == '__main__':
     infos = {
+        'metier': "Mage d'Aria",
         'nom': "Test",
         'age': "23",
         'possessions': ["Alumettes", "mouchoir", "gobelet"]
         }
             
-    lot = LotPersonnage(infos["nom"], infos["age"], infos["possessions"])
+    lot = LotPersonnage(infos['metier'], infos["nom"], infos["age"], infos["possessions"])
     print(lot.lot_str())
     lot.export()

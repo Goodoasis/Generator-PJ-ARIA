@@ -15,7 +15,8 @@ PDF_PATH = path.join(PDF_FOLDER, "vierge.pdf")
 EXPORT_PATH = path.join(CURRENT_DIR, "export")
 
 # Taille des polices.
-SIZE_NAME = 15
+SIZE_METIER = 18
+SIZE_NAME = 14
 SIZE_PV = 20
 SIZE_AGE = 11
 SIZE_CARAC = 13
@@ -29,6 +30,7 @@ POSS_X = 30
 
 # Position du nom, age, point de vie.
 perso_pos = {
+    'metier': (125, 629),
     'name': (151, 609),
     'age': (146, 595),
     'pv': (438, 644)
@@ -123,7 +125,6 @@ class PdfExporter():
                 with open(path_, "wb") as fr:
                     output.write(fr)
 
-
     
     def write(self):
         """
@@ -139,7 +140,9 @@ class PdfExporter():
                 continue
             value = str(value)
             if key in perso_pos: # Le cas le plus récurent.
-                if key == "pv":
+                if key == "metier":
+                    font_size = SIZE_METIER
+                elif key == "pv":
                     font_size = SIZE_PV
                 elif key == "name":
                     font_size = SIZE_NAME
@@ -175,7 +178,7 @@ class PdfExporter():
 if __name__ == '__main__':
     from fiche_perso import Personnage
     poss = ["Dague", "Bourse (560 rois)", "corde abimée", "papier", "chapeau", "statuette dieu ennemi"]
-    perso1 = Personnage("Aleam Testis", "10", possessions=poss)
+    perso1 = Personnage(metier="Misericordieux",name="Aleam Testis", age="10", possessions=poss)
     perso2 = Personnage("Aleam2 Testis", "20", possessions=poss[1:])
     perso3 = Personnage("Aleam3 Testis", "30", possessions=poss[2:])
     persos = [perso1, perso2, perso3]

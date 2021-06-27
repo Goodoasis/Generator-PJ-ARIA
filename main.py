@@ -1,18 +1,23 @@
 from fiche_perso import LotPersonnage
 
 
-msg= "Veillez choisir un nom*, un age et une liste d'objets en votre possessions. *Obligatoire."
+msg= """Pour générer une fiche de personnage, veillez entrer les inforamtions correspondantes.
+\t-Le métier de votre personnage. (Exemples: aventurier·e ou Mage d'Aria)
+\t-Le prénom et nom. (Exemple: Clodomir de Cuivrechamps).
+\t-L'âge (5ans ou 172ans).
+\t-Les objets en sa possessions, séparés par une virgule (Exemple: "Lanterne, bâton de marche, bourse vide, clef rouillée")."""
+
 print(msg)
-print("\tNotez vos possessions, séparées par une virgule.")
 
 infos = {
-    'nom': " ",
+    'metier': "",
+    'nom': "",
     'age': "",
     'possessions': []
     }
 
 for key in infos.keys():
-    msg_ = key.capitalize() + " :\n"
+    msg_ = key.capitalize() + " :  "
     ipt = input(msg_)
     if key == 'possessions':
         splitted = ipt.split(',')
