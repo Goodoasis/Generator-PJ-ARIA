@@ -37,3 +37,20 @@ dev on Python 3.8.6
 lib:
     pypdf2
     reportlab
+
+fiche_perso.py:
+    class Personnage: Prend des informations en strings en arguments.
+    Objet contenant les informations du personnage.
+    Les methodes servent à retourner des dictionnaires ou en string intélligible
+    contenant les informations du personnages (dans un but de les comparer).
+
+    Class LotPersonnage: Gestionnaire de Personnage.
+    Prend informations d'un personnage pour creeer trois personnges avec des
+    caratéristiques différentes.
+    Recupere les version string pour en faire un resumer complet des trois 
+    personnages.
+    Appel pdf_exporter pour chaque personnage.
+
+pdf_exporter.py:
+    Class PdfExporter: Prend un personnage en arguments.
+    Remplis le pdf vierge avec les informations du personnage.

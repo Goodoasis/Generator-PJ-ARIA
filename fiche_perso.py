@@ -230,7 +230,7 @@ if __name__ == '__main__':
         'metier': "Mage d'Aria",
         'nom': "Test",
         'age': "23",
-        'possessions': ["Alumettes", "mouchoir", "gobelet"]
+        'possessions': ["Allumettes", "mouchoir", "gobelet"]
         }
             
     lot = LotPersonnage(infos['metier'], infos["nom"], infos["age"], infos["possessions"])

@@ -27,6 +27,6 @@ for key in infos.keys():
         value = ipt.lower().strip()
     infos[key] = value
 
-lot = LotPersonnage(infos["nom"], infos["age"], infos["possessions"])
+lot = LotPersonnage(infos["metier"], infos["nom"], infos["age"], infos["possessions"])
 print(lot.lot_str())
 lot.export()
