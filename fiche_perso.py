@@ -153,7 +153,7 @@ class Personnage():
         return sum([value for value in self.carac.values()])
     
     def __str__(self):
-        carac = '\n' + self.metier.title() + self.name.title() + '\n'
+        carac = f"\n{self.name.title()} {self.metier.title()}\n"
         carac += f"Point de vie: {self.pv}\n"
         carac += f"\tCARACTERISTIQUES (total:{self.comput_total()})\n"
         for item in self.carac.items():
@@ -197,7 +197,7 @@ class LotPersonnage():
 
     @staticmethod   
     def file_name():
-        name = f"perso_lot"
+        name = "perso_lot"
         file_name = name + ".txt"
         return file_name
     
@@ -209,23 +209,30 @@ class LotPersonnage():
             f.write(inst.lot_str())
 
     def __init__(self, metier:str = "", name:str = "", age = "", possessions:list=[]):
-        self.dico = {}
+        self.persos = {}
         for i in range(NOMBRE_TIRAGE):
-            self.dico[f'name_{i+1}'] = Personnage(metier=metier, name=name, age=age, possessions=possessions)
+            self.persos[f'{name}_{i+1}'] = Personnage(metier=metier, name=name, age=age, possessions=possessions)
         LotPersonnage.save_file(self)
     
     def lot_str(self):
         str_ = ""
-        for value in self.dico.values():
+        for value in self.persos.values():
             str_ += value.__str__()
         return str_
     
     def export(self):
-        for perso in self.dico.values():
+        for perso in self.persos.values():
             PdfExporter(perso)
+    
+    def get_full_dict(self):
+        persos_dict = {}
+        for key, perso in self.persos.items():
+            persos_dict[key] = perso.get_full_dict()
+        return persos_dict
 
 
 if __name__ == '__main__':
+    from pprint import pprint
     infos = {
         'metier': "Mage d'Aria",
         'nom': "Test",
@@ -236,3 +243,4 @@ if __name__ == '__main__':
     lot = LotPersonnage(infos['metier'], infos["nom"], infos["age"], infos["possessions"])
     print(lot.lot_str())
     lot.export()
+    pprint(lot.get_full_dict())
