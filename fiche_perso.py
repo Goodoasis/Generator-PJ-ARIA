@@ -235,7 +235,7 @@ if __name__ == '__main__':
     from pprint import pprint
     infos = {
         'metier': "Mage d'Aria",
-        'nom': "Test",
+        'nom': "Aleam",
         'age': "23",
         'possessions': ["Allumettes", "mouchoir", "gobelet"]
         }

@@ -3,7 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,python,venv,virtualenv
 
 # Projet
-export/
+export/*
 vierge/
 save/
 tmp.pdf
