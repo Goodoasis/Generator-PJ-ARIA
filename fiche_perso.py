@@ -1,55 +1,25 @@
 from collections import namedtuple
-from pprint import pprint
-
 from os import path
 from random import randint
 from math import floor
 
 from pdf_exporter import EXPORT_PATH, PdfExporter
 
+
 NOMBRE_TIRAGE = 3
-
 Infos = namedtuple("Infos", ["nom", "metier", "pv", "possessions"])
-
 Carac = namedtuple("Carac", ["force", "dexterite", "endurance", "intelligence", "charisme"])
-
-Compe = namedtuple("Compe",  ["artisanat", "combat", "combat_distance",
+Compe = namedtuple("Compe", ["artisanat", "combat", "combat_distance",
                                 "connais_nature", "connais_secrets",
                                 "courir", "discretion", "droit", "esquiver",
                                 "intimider", "lire", "mentir", "perception",
                                 "piloter", "psychologie", "reflexes",
-                                "serrures", "soigner", "survie", "voler"]
-                )
+                                "serrures", "soigner", "survie", "voler"])
 
 
 class Personnage():
 
-    @staticmethod
-    def verify_age(age):
-        """Return "" if name not an interger"""
-        try:
-            age_ = int(age)
-            if age_ < 1:
-                age_ = age_ * -1
-        except ValueError:
-            age_ = ""
-
-        return str(age_)
-        
-    @staticmethod
-    def comput_competence(stat1, stat2):
-        return floor((stat1 + stat2)/2) * 5
-
-    @staticmethod
-    def random_carac():
-        return sum([randint(1, 6) for _ in range(3)])
-
-    @staticmethod
-    def set_pv(self):
-        return 14 if self.carac.endurance > 14 else self.carac.endurance
-    
     def __init__(self, metier:str="", name:str="", age = "", possessions:list=[]):
-
         # Caracteristiques:
         force =         Personnage.random_carac()
         dexterite =     Personnage.random_carac()
@@ -57,12 +27,10 @@ class Personnage():
         intelligence =  Personnage.random_carac()
         charisme =      Personnage.random_carac()
         self.carac = Carac(force, dexterite, endurance, intelligence, charisme)
-
         # Infos:
-        age = Personnage.verify_age(age)
-        pv = Personnage.set_pv(self)
+        age =   Personnage.verify_age(age)
+        pv =    Personnage.set_pv(self)
         self.infos = Infos(name, metier, pv, possessions)
-
         # Compétences:
         artisanat =         Personnage.comput_competence(dexterite, intelligence)
         combat =            Personnage.comput_competence(force, dexterite)
@@ -88,14 +56,37 @@ class Personnage():
                         courir, discretion, droit, esquiver, intimider, lire, mentir, perception,
                         piloter, psychologie, reflexes, serrures, soigner, survie, voler)
 
+    @staticmethod
+    def verify_age(age):
+        """Return "" if name not an interger"""
+        try:
+            age_ = int(age)
+            if age_ < 1:
+                age_ = age_ * -1
+        except ValueError:
+            age_ = ""
+        return str(age_)
+        
+    @staticmethod
+    def comput_competence(stat1, stat2):
+        return floor((stat1 + stat2)/2) * 5
 
+    @staticmethod
+    def random_carac():
+        return sum([randint(1, 6) for _ in range(3)])
+
+    @staticmethod
+    def set_pv(self):
+        return 14 if self.carac.endurance > 14 else self.carac.endurance
+    
+    @staticmethod
     def comput_total(self):
         return sum(self.carac)
     
     def __str__(self):
         carac = f"\n{self.infos.nom.title()} {self.infos.metier.title()}\n"
         carac += f"Point de vie: {self.infos.pv}\n"
-        carac += f"\tCARACTERISTIQUES (total:{self.comput_total()})\n"
+        carac += f"\tCARACTERISTIQUES (total:{Personnage.comput_total(self)})\n"
         for item in self.carac._asdict().items():
             tab = 1
             if len(item[0]) < 12:
@@ -113,23 +104,25 @@ class Personnage():
             if len(item[0]) < 6:
                 tab = 4
             carac += "\t\t-{}:{}{} %\n".format(item[0].capitalize(),'\t'*tab, item[1])
-
         carac += "_" * 60 + '\n'
         return carac
-    
+
+    @staticmethod
     def get_dict_carac(self):
         return self.carac._asdict()
-    
+
+    @staticmethod
     def get_dict_compe(self):
         return self.compe._asdict()
-    
+
+    @staticmethod
     def get_dict_infos(self):
         return self.infos._asdict()
-    
+
     def get_full_dict(self):
-        a = {**self.get_dict_infos(), **self.get_dict_carac(), **self.get_dict_compe()}
-        pprint(a)
-        return {**self.get_dict_infos(), **self.get_dict_carac(), **self.get_dict_compe()}
+        return {**Personnage.get_dict_infos(self),
+                **Personnage.get_dict_carac(self),
+                **Personnage.get_dict_compe(self)}
 
 
 class LotPersonnage():
@@ -180,6 +173,4 @@ if __name__ == '__main__':
         }
             
     lot = LotPersonnage(infos['metier'], infos["nom"], infos["age"], infos["possessions"])
-    print(lot.lot_str())
     lot.export()
-    pprint(lot.get_full_dict())
