@@ -1,3 +1,6 @@
+from collections import namedtuple
+from pprint import pprint
+
 from os import path
 from random import randint
 from math import floor
@@ -5,6 +8,18 @@ from math import floor
 from pdf_exporter import EXPORT_PATH, PdfExporter
 
 NOMBRE_TIRAGE = 3
+
+Infos = namedtuple("Infos", ["nom", "metier", "pv", "possessions"])
+
+Carac = namedtuple("Carac", ["force", "dexterite", "endurance", "intelligence", "charisme"])
+
+Compe = namedtuple("Compe",  ["artisanat", "combat", "combat_distance",
+                                "connais_nature", "connais_secrets",
+                                "courir", "discretion", "droit", "esquiver",
+                                "intimider", "lire", "mentir", "perception",
+                                "piloter", "psychologie", "reflexes",
+                                "serrures", "soigner", "survie", "voler"]
+                )
 
 
 class Personnage():
@@ -20,143 +35,68 @@ class Personnage():
             age_ = ""
 
         return str(age_)
-
-    @staticmethod
-    def artisanat(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["intelligence"])/2) *5
-
-    @staticmethod
-    def combat(inst):
-        return floor((inst.carac["force"] + inst.carac["dexterite"])/2) *5
-
-    @staticmethod
-    def combat_distance(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["intelligence"])/2) *5
-
-    @staticmethod
-    def connais_nature(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["intelligence"])/2) *5
-
-    @staticmethod
-    def connais_secrets(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def courir(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["endurance"])/2) *5
-
-    @staticmethod
-    def discretion(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def droit(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def esquiver(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["intelligence"])/2) *5
-
-    @staticmethod
-    def intimider(inst):
-        return floor((inst.carac["force"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def lire(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def mentir(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def perception(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def piloter(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["endurance"])/2) *5
         
     @staticmethod
-    def psychologie(inst):
-        return floor((inst.carac["endurance"] + inst.carac["intelligence"])/2) *5
-
-    @staticmethod
-    def reflexes(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["intelligence"])/2) *5
-
-    @staticmethod
-    def serrures(inst):
-        return floor((inst.carac["dexterite"] + inst.carac["endurance"])/2) *5
-
-    @staticmethod
-    def soigner(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
-
-    @staticmethod
-    def survie(inst):
-        return floor((inst.carac["endurance"] + inst.carac["intelligence"])/2) *5
-    
-    @staticmethod
-    def voler(inst):
-        return floor((inst.carac["intelligence"] + inst.carac["charisme"])/2) *5
+    def comput_competence(stat1, stat2):
+        return floor((stat1 + stat2)/2) * 5
 
     @staticmethod
     def random_carac():
         return sum([randint(1, 6) for _ in range(3)])
 
     @staticmethod
-    def set_pv(inst):
-        value = inst.carac["endurance"]
-        pv = 14 if value > 14 else value
-        return pv
+    def set_pv(self):
+        return 14 if self.carac.endurance > 14 else self.carac.endurance
     
     def __init__(self, metier:str="", name:str="", age = "", possessions:list=[]):
-        self.metier = metier
-        self.name = name
-        self.age = Personnage.verify_age(age)
-        self.possessions = possessions
-        self.carac = {
-            "force": Personnage.random_carac(),
-            "dexterite": Personnage.random_carac(),
-            "endurance": Personnage.random_carac(),
-            "intelligence": Personnage.random_carac(),
-            "charisme": Personnage.random_carac()
-            }
 
-        self.compe = {
-            "artisanat": Personnage.artisanat(self),
-            "combat": Personnage.combat(self),
-            "combat_distance": Personnage.combat_distance(self),
-            "connais_nature": Personnage.connais_nature(self),
-            "connais_secrets": Personnage.connais_secrets(self),
-            "courir": Personnage.courir(self),
-            "discretion": Personnage.discretion(self),
-            "droit": Personnage.droit(self),
-            "esquiver": Personnage.esquiver(self),
-            "intimider": Personnage.intimider(self),
-            "lire": Personnage.lire(self),
-            "mentir": Personnage.mentir(self),
-            "perception": Personnage.perception(self),
-            "piloter": Personnage.piloter(self),
-            "psychologie": Personnage.psychologie(self),
-            "reflexes": Personnage.reflexes(self),
-            "serrures": Personnage.serrures(self),
-            "soigner": Personnage.soigner(self),
-            "survie": Personnage.survie(self),
-            "voler" : Personnage.voler(self)
-            }
-        self.pv = Personnage.set_pv(self)
+        # Caracteristiques:
+        force =         Personnage.random_carac()
+        dexterite =     Personnage.random_carac()
+        endurance =     Personnage.random_carac()
+        intelligence =  Personnage.random_carac()
+        charisme =      Personnage.random_carac()
+        self.carac = Carac(force, dexterite, endurance, intelligence, charisme)
+
+        # Infos:
+        age = Personnage.verify_age(age)
+        pv = Personnage.set_pv(self)
+        self.infos = Infos(name, metier, pv, possessions)
+
+        # Compétences:
+        artisanat =         Personnage.comput_competence(dexterite, intelligence)
+        combat =            Personnage.comput_competence(force, dexterite)
+        combat_distance =   Personnage.comput_competence(dexterite, intelligence)
+        connais_nature =    Personnage.comput_competence(dexterite, intelligence)
+        connais_secrets =   Personnage.comput_competence(intelligence, charisme)
+        courir =            Personnage.comput_competence(dexterite, endurance)
+        discretion =        Personnage.comput_competence(dexterite, charisme)
+        droit =             Personnage.comput_competence(intelligence, charisme)
+        esquiver =          Personnage.comput_competence(dexterite, intelligence)
+        intimider =         Personnage.comput_competence(force, charisme)
+        lire =              Personnage.comput_competence(intelligence, charisme)
+        mentir =            Personnage.comput_competence(intelligence, charisme)
+        perception =        Personnage.comput_competence(intelligence, charisme)
+        piloter =           Personnage.comput_competence(dexterite, endurance)
+        psychologie =       Personnage.comput_competence(endurance, intelligence)
+        reflexes =          Personnage.comput_competence(dexterite, intelligence)
+        serrures =          Personnage.comput_competence(dexterite, endurance)
+        soigner =           Personnage.comput_competence(intelligence, charisme)
+        survie =            Personnage.comput_competence(endurance, intelligence)
+        voler =             Personnage.comput_competence(dexterite, intelligence)
+        self.compe = Compe(artisanat, combat, combat_distance, connais_nature, connais_secrets,
+                        courir, discretion, droit, esquiver, intimider, lire, mentir, perception,
+                        piloter, psychologie, reflexes, serrures, soigner, survie, voler)
 
 
     def comput_total(self):
-        return sum([value for value in self.carac.values()])
+        return sum(self.carac)
     
     def __str__(self):
-        carac = f"\n{self.name.title()} {self.metier.title()}\n"
-        carac += f"Point de vie: {self.pv}\n"
+        carac = f"\n{self.infos.nom.title()} {self.infos.metier.title()}\n"
+        carac += f"Point de vie: {self.infos.pv}\n"
         carac += f"\tCARACTERISTIQUES (total:{self.comput_total()})\n"
-        for item in self.carac.items():
+        for item in self.carac._asdict().items():
             tab = 1
             if len(item[0]) < 12:
                 tab += 1
@@ -164,7 +104,7 @@ class Personnage():
                 tab += 1
             carac += "\t\t-{}:{}{}\n".format(item[0].capitalize(),'\t'*tab, item[1])
         carac += "\n\tCOMPETENCES\n"
-        for item in self.compe.items():
+        for item in self.compe._asdict().items():
             tab = 1
             if len(item[0]) < 13:
                 tab = 2
@@ -178,19 +118,18 @@ class Personnage():
         return carac
     
     def get_dict_carac(self):
-        return self.carac
+        return self.carac._asdict()
     
     def get_dict_compe(self):
-        return self.compe
+        return self.compe._asdict()
+    
+    def get_dict_infos(self):
+        return self.infos._asdict()
     
     def get_full_dict(self):
-        full_dict= {**self.carac, **self.compe}
-        full_dict['metier'] = self.metier.title()
-        full_dict['name'] = self.name.title()
-        full_dict['pv'] = self.pv
-        full_dict['age'] = self.age
-        full_dict['possessions'] = self.possessions
-        return full_dict
+        a = {**self.get_dict_infos(), **self.get_dict_carac(), **self.get_dict_compe()}
+        pprint(a)
+        return {**self.get_dict_infos(), **self.get_dict_carac(), **self.get_dict_compe()}
 
 
 class LotPersonnage():
@@ -208,10 +147,10 @@ class LotPersonnage():
         with open (path_, "w") as f:
             f.write(inst.lot_str())
 
-    def __init__(self, metier:str = "", name:str = "", age = "", possessions:list=[]):
+    def __init__(self, metier:str = "", nom:str = "", age = "", possessions:list=[]):
         self.persos = {}
         for i in range(NOMBRE_TIRAGE):
-            self.persos[f'{name}_{i+1}'] = Personnage(metier=metier, name=name, age=age, possessions=possessions)
+            self.persos[f'{nom}_{i+1}'] = Personnage(metier, nom, age, possessions)
         LotPersonnage.save_file(self)
     
     def lot_str(self):

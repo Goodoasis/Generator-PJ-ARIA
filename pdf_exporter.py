@@ -31,7 +31,7 @@ POSS_X = 30
 # Position du nom, age, point de vie.
 perso_pos = {
     'metier': (125, 629),
-    'name': (151, 609),
+    'nom': (151, 609),
     'age': (146, 595),
     'pv': (438, 644)
     }
@@ -144,7 +144,7 @@ class PdfExporter():
                     font_size = SIZE_METIER
                 elif key == "pv":
                     font_size = SIZE_PV
-                elif key == "name":
+                elif key == "nom":
                     font_size = SIZE_NAME
                 elif key == "age":
                     font_size = SIZE_AGE
